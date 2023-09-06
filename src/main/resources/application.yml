@@ -1,0 +1,27 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:p6spy:mysql://172.16.10.50:26316/wwyt-sh-0317?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: Password2017
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+  redis:
+    host: 172.16.10.50
+    port: 26312
+    password: Seekcy2017
+    timeout: 20000
+  #设置缓存组件类型
+  cache:
+    type: redis
+    #设置缓存过期时间
+    redis:
+      time-to-live: 3600000
+      #指定默认前缀，如果此处我们指定了前缀则使用我们指定的前缀，推荐此处不指定前缀
+      #key-prefix: CACHE_
+      #是否开始前缀，建议开启
+      use-key-prefix: true
+      #是否缓存空值，防止缓存穿透
+      cache-null-values: true
+
