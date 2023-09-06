@@ -55,6 +55,10 @@ public class AlcoholBaseMO implements Serializable {
         this.siteAddress = siteAddress;
         this.deviceAddress = deviceAddress;
         this.command = command;
+        this.setData(data);
+    }
+
+    public void setData(byte[] data) {
         this.data = data;
         int length = data != null ? data.length + 5 : 5;
         this.length = (short) (((length & 0xFF) << 8) | ((length >> 8) & 0xFF));

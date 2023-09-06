@@ -24,11 +24,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AlcoholMessageHandler extends SimpleChannelInboundHandler<AlcoholBaseMO> {
 
     public static Map<String, Object> cmdResult = new ConcurrentHashMap<>();
+    public static Map<String, AlcoholHeartbeatBaseMO> ipRecordNumMapping = new ConcurrentHashMap<>();
+
     public static final String KEY_TEMPLATE = "{}_{}";
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, AlcoholBaseMO message) {
-        log.info("AlcoholMessageHandler channelRead0 message:{}", message.toString());
         AlcoholCommandEnum command = AlcoholCommandEnum.findByCommand(message.getCommand());
         if (null != command) {
             InetSocketAddress remoteAddress = (InetSocketAddress) channelHandlerContext.channel().remoteAddress();
@@ -38,7 +39,8 @@ public class AlcoholMessageHandler extends SimpleChannelInboundHandler<AlcoholBa
             switch (command) {
                 case HEARTBEAT:
                     AlcoholHeartbeatBaseMO heartbeatBaseMO = new AlcoholHeartbeatBaseMO(message);
-                    log.info("AlcoholMessageHandler channelRead0 HEARTBEAT message:{}", heartbeatBaseMO);
+                    ipRecordNumMapping.put(clientIp,heartbeatBaseMO);
+//                    log.info("AlcoholMessageHandler channelRead0 HEARTBEAT message:{}", heartbeatBaseMO);
                     break;
                 case ALCOHOL_DETECTION:
                     break;
@@ -46,7 +48,7 @@ public class AlcoholMessageHandler extends SimpleChannelInboundHandler<AlcoholBa
                     break;
                 case GET_DETECTION_RECORDS:
                     AlcoholDetectionRecordsMO recordsMO = new AlcoholDetectionRecordsMO(message);
-                    log.info("AlcoholMessageHandler channelRead0 HEARTBEAT message:{}", recordsMO);
+                    log.info("AlcoholMessageHandler channelRead0 GET_DETECTION_RECORDS message:{}", recordsMO);
                     break;
                 default:
                     break;

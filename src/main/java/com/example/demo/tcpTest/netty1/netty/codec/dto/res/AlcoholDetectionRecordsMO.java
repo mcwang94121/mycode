@@ -1,7 +1,7 @@
 package com.example.demo.tcpTest.netty1.netty.codec.dto.res;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.example.demo.tcpTest.netty1.netty.codec.dto.req.AlcoholBaseMO;
-import com.example.demo.tcpTest.netty1.netty.utils.AlcoholProtocolUtil;
 import com.joysuch.open.platform.common.util.ProtocolUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -76,10 +76,14 @@ public class AlcoholDetectionRecordsMO extends AlcoholBaseMO {
         super(message.getSiteAddress(), message.getDeviceAddress(), message.getCommand(), message.getData());
         byte[] data = message.getData();
         if (data.length > 0) {
-            this.setStatus(data[0]);
-            this.setNum((int) AlcoholProtocolUtil.byteArrayToLong(data,1,4,false));
-            this.setWorkCode((int) AlcoholProtocolUtil.byteArrayToLong(data,5,8,false));
-            this.setAlcoholContent((int) AlcoholProtocolUtil.byteArrayToLong(data,9,10,false));
+            byte status = data[0];
+            this.setStatus(status);
+            this.setNum(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 1, 4),false));
+            if (status == 1) {
+                return;
+            }
+            this.setWorkCode(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 5, 8),false));
+            this.setAlcoholContent(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 9, 10),false));
             this.setResult(data[11]);
             this.setTime(LocalDateTime.of(data[12], data[13], data[14], data[15], data[16], data[17]));
             this.setWorkMode(data[18]);

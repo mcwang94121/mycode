@@ -1,7 +1,7 @@
 package com.example.demo.tcpTest.netty1.netty.codec.dto.res;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.example.demo.tcpTest.netty1.netty.codec.dto.req.AlcoholBaseMO;
-import com.example.demo.tcpTest.netty1.netty.utils.AlcoholProtocolUtil;
 import com.joysuch.open.platform.common.util.ProtocolUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,8 +63,8 @@ public class AlcoholHeartbeatBaseMO extends AlcoholBaseMO {
             this.setTime(LocalDateTime.of(data[0], data[1], data[2], data[3], data[4], data[5]));
             this.setDeviceStatus(data[6]);
             this.setProbeCommunicationStatus(data[7]);
-            this.setRecordNumber((int) AlcoholProtocolUtil.byteArrayToLong(data,8,11,false));
-            this.setPersonNumber((int) AlcoholProtocolUtil.byteArrayToLong(data,12,15,false));
+            this.setRecordNumber(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 8, 11),false));
+            this.setPersonNumber(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 12, 15),false));
         }
     }
 }

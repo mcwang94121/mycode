@@ -25,7 +25,7 @@ public class AlcoholGetDetectionMO implements Serializable {
     public byte[] toByteArray() {
         byte[] bs = new byte[4];
         int index = 0;
-        ProtocolUtil.putByteArrToBuffer(bs, ProtocolUtil.intToByteArray(detectionNum,true), index);
+        ProtocolUtil.putByteArrToBuffer(bs, ProtocolUtil.intToByteArray(detectionNum,false), index);
         return bs;
     }
 }

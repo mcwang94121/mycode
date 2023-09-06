@@ -1,12 +1,12 @@
 package com.example.demo.tcpTest.netty1.netty.codec;
 
 import com.example.demo.tcpTest.netty1.netty.codec.dto.req.AlcoholBaseMO;
+import com.example.demo.tcpTest.netty1.netty.eunms.AlcoholCommandEnum;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -38,31 +38,19 @@ public class AlcoholMessageDecoder extends ByteToMessageDecoder {
 
         // 检查字节缓冲区中是否有足够的字节用于解析协议头
         if (bytes < DATA_MIN_LENGTH) {
-//            log.error("AlcoholTcpMessageDecoder decode data length check fail :{}", bytes);
             return;
         }
-        // 打印原始帧
-        StringBuilder originalFrame = new StringBuilder();
-        for (int i = 0; i < bytes + 2; i++) {
-            byte aByte = in.getByte(i);
-            originalFrame.append(Integer.toHexString(aByte & 0xFF));
-            originalFrame.append(" ");
-        }
-        log.info("AlcoholTcpMessageDecoder decode originalFrame :{}", originalFrame);
-
         // 标记当前读取位置，以便在解析失败时可以恢复到这个位置
         in.markReaderIndex();
 
         // 获取读取起点下标
         int idx = 0;
-        int idx1 = 0;
         boolean hasHeaders = false;
         for (int i = 0; i < bytes; i++) {
             byte header1 = in.getByte(i);
             byte header2 = in.getByte(i + 1);
             if (header1 == (byte) 0xAA && header2 == (byte) 0xBB) {
                 idx = i;
-                idx1 = i;
                 hasHeaders = true;
                 break;
             }
@@ -78,8 +66,6 @@ public class AlcoholMessageDecoder extends ByteToMessageDecoder {
         idx += 1;
 
         if (header1 != (byte) 0xAA || header2 != (byte) 0xBB) {
-            // 如果帧头不匹配，则抛出异常并关闭连接
-//            log.error("AlcoholTcpMessageDecoder decode header check fail :{},{}", header1, header2);
             return;
         }
         // 站点地址到数据域字节数; 需要高低位颠倒
@@ -117,22 +103,23 @@ public class AlcoholMessageDecoder extends ByteToMessageDecoder {
         }
 
         short checkCode = in.getShort(idx);
-        idx += 2;
 
         checkCode = (short) (((checkCode & 0xFF) << 8) | ((checkCode >> 8) & 0xFF));
         // 检查校验码是否匹配
         if (checksum != checkCode) {
-            // 校验失败，关闭连接或执行其他错误处理
-//            log.error("AlcoholTcpMessageDecoder decode checksum!=checkCode :{},{}", checksum, checkCode);
             return;
         }
 
         byte[] dataAll = new byte[length + 6];
         in.readBytes(dataAll);
-        String dataJson = new String(dataAll, StandardCharsets.UTF_8);
-
-        log.info("ThirdPartyDecoder：json:[{}]", dataJson);
-
+        if (command != AlcoholCommandEnum.HEARTBEAT.getCommand()) {
+            StringBuilder originalFrame = new StringBuilder();
+            for (byte aByte : dataAll) {
+                originalFrame.append(Integer.toHexString(aByte & 0xFF));
+                originalFrame.append(" ");
+            }
+            log.info("AlcoholTcpMessageDecoder decode originalFrame :{}", originalFrame);
+        }
         out.add(new AlcoholBaseMO(siteAddress, deviceAddress, command, data));
     }
 }
