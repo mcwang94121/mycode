@@ -19,9 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class AlcoholDetectionRecordsMO extends AlcoholBaseMO {
-
-    private static final long serialVersionUID = -2511684421620148962L;
+public class AlcoholGetDetectionRecordResMO extends AlcoholBaseMO {
 
     /**
      * 记录状态
@@ -72,18 +70,18 @@ public class AlcoholDetectionRecordsMO extends AlcoholBaseMO {
      */
     private int workMode;
 
-    public AlcoholDetectionRecordsMO(AlcoholBaseMO message) {
+    public AlcoholGetDetectionRecordResMO(AlcoholBaseMO message) {
         super(message.getSiteAddress(), message.getDeviceAddress(), message.getCommand(), message.getData());
         byte[] data = message.getData();
         if (data.length > 0) {
             byte status = data[0];
             this.setStatus(status);
-            this.setNum(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 1, 4),false));
+            this.setNum(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 1, 4), false));
             if (status == 1) {
                 return;
             }
-            this.setWorkCode(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 5, 8),false));
-            this.setAlcoholContent(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 9, 10),false));
+            this.setWorkCode(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 5, 8), false));
+            this.setAlcoholContent(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 9, 10), false));
             this.setResult(data[11]);
             this.setTime(LocalDateTime.of(data[12], data[13], data[14], data[15], data[16], data[17]));
             this.setWorkMode(data[18]);

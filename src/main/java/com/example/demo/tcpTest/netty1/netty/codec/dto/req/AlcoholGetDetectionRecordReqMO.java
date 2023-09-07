@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlcoholGetDetectionMO implements Serializable {
+public class AlcoholGetDetectionRecordReqMO implements Serializable {
 
     private static final long serialVersionUID = -3071843061807048944L;
 

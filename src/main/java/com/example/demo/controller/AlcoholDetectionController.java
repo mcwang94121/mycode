@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.service.AlcoholDetectionService;
 import com.example.demo.tcpTest.netty1.netty.codec.dto.AlcoholPushDTO;
+import com.joysuch.open.platform.common.pojo.vo.RespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +24,12 @@ public class AlcoholDetectionController {
 
     /**
      * xxx修改
+     *
+     * @return
      */
     @PutMapping
-    public void update(@RequestBody AlcoholPushDTO cmd) throws InterruptedException {
-        service.push(cmd);
+    public RespVO<Object> update(@RequestBody AlcoholPushDTO cmd) throws InterruptedException {
+        return RespVO.success(service.push(cmd));
     }
 
 }

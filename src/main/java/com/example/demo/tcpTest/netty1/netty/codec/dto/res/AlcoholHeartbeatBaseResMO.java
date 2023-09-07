@@ -19,9 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class AlcoholHeartbeatBaseMO extends AlcoholBaseMO {
-
-    private static final long serialVersionUID = -2511684421620148962L;
+public class AlcoholHeartbeatBaseResMO extends AlcoholBaseMO {
 
     /**
      * 时间
@@ -56,15 +54,15 @@ public class AlcoholHeartbeatBaseMO extends AlcoholBaseMO {
      */
     private int personNumber;
 
-    public AlcoholHeartbeatBaseMO(AlcoholBaseMO message) {
+    public AlcoholHeartbeatBaseResMO(AlcoholBaseMO message) {
         super(message.getSiteAddress(), message.getDeviceAddress(), message.getCommand(), message.getData());
         byte[] data = message.getData();
         if (data.length > 0) {
             this.setTime(LocalDateTime.of(data[0], data[1], data[2], data[3], data[4], data[5]));
             this.setDeviceStatus(data[6]);
             this.setProbeCommunicationStatus(data[7]);
-            this.setRecordNumber(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 8, 11),false));
-            this.setPersonNumber(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 12, 15),false));
+            this.setRecordNumber(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 8, 11), false));
+            this.setPersonNumber(ProtocolUtil.byteArrayToInt(ArrayUtil.sub(data, 12, 15), false));
         }
     }
 }

@@ -118,7 +118,7 @@ public class AlcoholMessageDecoder extends ByteToMessageDecoder {
                 originalFrame.append(Integer.toHexString(aByte & 0xFF));
                 originalFrame.append(" ");
             }
-            log.info("AlcoholTcpMessageDecoder decode originalFrame :{}", originalFrame);
+            log.info("AlcoholMessageDecoder accept originalFrame :{}", originalFrame);
         }
         out.add(new AlcoholBaseMO(siteAddress, deviceAddress, command, data));
     }

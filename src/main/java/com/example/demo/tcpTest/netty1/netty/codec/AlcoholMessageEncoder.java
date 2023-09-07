@@ -1,5 +1,6 @@
 package com.example.demo.tcpTest.netty1.netty.codec;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.example.demo.tcpTest.netty1.netty.codec.dto.req.AlcoholBaseMO;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,9 +20,8 @@ public class AlcoholMessageEncoder extends MessageToByteEncoder<AlcoholBaseMO> {
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, AlcoholBaseMO nettyTestMessage, ByteBuf out) {
-        byte[] byteArray = nettyTestMessage.toByteArray();
-        out.writeBytes(header);
-        out.writeBytes(byteArray);
-        log.info("AlcoholTcpMessageEncoder encode nettyTestMessage byteArray:{}", byteArray);
+        byte[] bytes = ArrayUtil.addAll(header,nettyTestMessage.toByteArray());
+        out.writeBytes(bytes);
+        log.info("AlcoholTcpMessageEncoder send nettyTestMessage byteArray:{}", bytes);
     }
 }

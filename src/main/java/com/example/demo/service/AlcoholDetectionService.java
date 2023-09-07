@@ -9,5 +9,5 @@ import com.example.demo.tcpTest.netty1.netty.codec.dto.AlcoholPushDTO;
  * @date 2023年09月05日
  */
 public interface AlcoholDetectionService {
-    void push(AlcoholPushDTO cmd) throws InterruptedException;
+    Object push(AlcoholPushDTO cmd) throws InterruptedException;
 }
